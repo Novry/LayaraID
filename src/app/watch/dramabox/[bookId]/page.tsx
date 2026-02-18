@@ -311,7 +311,6 @@ export default function DramaBoxWatchPage() {
                 onEnded={handleVideoEnded}
                 className="w-full h-full object-contain max-h-[100dvh]"
                 poster={currentEpisodeData.chapterImg}
-                {...(proxiedSubtitleUrl ? { crossOrigin: "anonymous" as const } : {})}
               />
             ) : (
               <div className="absolute inset-0 flex items-center justify-center z-20">
