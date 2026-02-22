@@ -2,26 +2,24 @@ import { safeJson, encryptedResponse } from "@/lib/api-utils";
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 
-const UPSTREAM_API = (process.env.NEXT_PUBLIC_API_BASE_URL || "https://magma-api.biz.id/dramabox/allepisode") + "/dramabox";
+// Kita langsung arahkan ke domain Magma API
+const UPSTREAM_API = "https://magma-api.biz.id";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ bookId: string }> }
 ) {
   const { bookId } = await params;
-  const headersList = await headers();
-  const accept = headersList.get("accept") || "";
-
-
-  // If API fetch -> proxy to upstream
+  
   try {
-    const response = await fetch(`${UPSTREAM_API}/allepisode?bookId=${bookId}`, {
+    // Memperbaiki URL agar sesuai dengan struktur Magma API: /dramabox/allepisode?bookId=...
+    const response = await fetch(`${UPSTREAM_API}/dramabox/allepisode?bookId=${bookId}`, {
       cache: 'no-store',
     });
 
     if (!response.ok) {
       return NextResponse.json(
-        { error: "Failed to fetch data" },
+        { error: "Gagal mengambil data dari Magma API" },
         { status: response.status }
       );
     }
@@ -31,7 +29,7 @@ export async function GET(
   } catch (error) {
     console.error("API Error:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Internal Server Error di LayarID" },
       { status: 500 }
     );
   }
